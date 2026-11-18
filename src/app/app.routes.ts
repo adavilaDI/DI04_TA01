@@ -5,10 +5,7 @@ export const routes: Routes = [
     path: 'home',
     loadComponent: () => import('./home/home.page').then((m) => m.HomePage),
   },
-  {
-    path: 'prueba-servidor',
-    loadComponent: () => import('./prueba-servidor/prueba-servidor.page').then((m) => m.PruebaServidorPage),
-  },
+//TODO - Añadir aquí las rutas de los componentes que se vayan a crear
   {
     path: '',
     redirectTo: 'home',

@@ -35,28 +35,8 @@ export class PruebaServidorPage {
   /** Bloquea el botón mientras la petición está en curso */
   enviando = signal(false);
 
+  // TODO - Añadir el método enviarMensaje() que se encargará de enviar el mensaje al servidor y procesar la respuesta.
   enviarMensaje() {
-    const texto = this.mensaje().trim();
-    //if(texto === ''), mediante (!texto) comprobamos si el valor es falsy, para un string el único valor falsy es ''
-    if (!texto) {
-      return;
-    }
-
-    this.enviando.set(true);
-    this.error.set(null);
-    this.respuesta.set(null);
-    this.recibidoEn.set(null);
-
-    this.servidorService.probarConexion(texto).subscribe({
-      next: (respuesta) => {
-        this.respuesta.set(respuesta.mensaje);
-        this.recibidoEn.set(respuesta.recibidoEn);
-        this.enviando.set(false);
-      },
-      error: () => {
-        this.error.set('No se pudo contactar con el servidor. ¿Está arrancado con "npm start" en la carpeta /server?');
-        this.enviando.set(false);
-      },
-    });
+    
   }
 }

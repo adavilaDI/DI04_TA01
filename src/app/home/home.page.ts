@@ -25,17 +25,17 @@ import {
 // ─────────────────────────────────────────────────────────────────────────────
 // IMPORTS — Interfaz, servicio y datos locales del proyecto
 // ─────────────────────────────────────────────────────────────────────────────
-import { RouterLink } from '@angular/router';
 import { Restaurante } from '../interface/restaurante';
 import { RestauranteService } from '../services/restaurante.service';
 import { AddRestauranteModalComponent } from '../components/add-restaurante-modal/add-restaurante-modal.component';
 import { GraficosComponent } from '../components/graficos/graficos.component';
 import restaurantesJSON from '../../assets/datos/restaurantes.json';
+// TODO - importar RouterLink para poder usarlo en el HTML de este componente, tanto el import como el import en @Component. Se necesita para el botón de "Probar servidor" que se añadirá más adelante.
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [IonicModule, GraficosComponent, RouterLink],
+  imports: [IonicModule, GraficosComponent],
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss']
 })
