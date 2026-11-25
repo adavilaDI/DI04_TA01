@@ -23,8 +23,12 @@
 
   <!-- TODO - Añadir el mensaje de respuesta y el error-->
    @if(respuesta()){
-    <p><strong>Respuesta: </strong>{{respuesta()}}</p>
-    <p><strong>Recibido en: </strong>{{recibidoEn()}}</p>
+    <ion-card color="success">
+      <ion-card-content>
+        <p><strong>Respuesta: </strong>{{respuesta()}}</p>
+        <p><strong>Recibido en: </strong>{{recibidoEn()}}</p>
+      </ion-card-content>
+    </ion-card>
    }
    @if(error()){
     <p style="color: red">Error: {{error()}}</p>
