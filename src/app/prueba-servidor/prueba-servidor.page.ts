@@ -1,3 +1,4 @@
+import { RespuestaEco } from './../services/servidor.service';
 // *****************************************************************************
 // PruebaServidorPage — TA01: primer contacto entre Angular y el servidor.
 //
@@ -8,6 +9,7 @@ import { Component, inject, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { ServidorService } from '../services/servidor.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-prueba-servidor',
@@ -37,6 +39,20 @@ export class PruebaServidorPage {
 
   // TODO - Añadir el método enviarMensaje() que se encargará de enviar el mensaje al servidor y procesar la respuesta.
   enviarMensaje() {
+    this.enviando.set(true);
+    this.servidorService.probarConexion(this.mensaje()).subscribe({
+      next: (datos: RespuestaEco) => {
+        this.respuesta.set(datos.mensaje);
+        this.recibidoEn.set(datos.recibidoEn);
+        this.enviando.set(false);
+        this.error.set(null);
+      },
+      error: (err: HttpErrorResponse) => {
+        this.respuesta.set(null);
+        this.error.set(err.error?.error);
+        this.enviando.set(false);
+      }
+    });
     
   }
 }

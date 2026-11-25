@@ -10,14 +10,24 @@
 <ion-content class="ion-padding">
   <!-- TODO - Añadir el ion-item-->
   <ion-item>
-    
+    <ion-label position="stacked">Mensaje a enviar</ion-label>
+    <ion-input placeholder="Escribe algo, por ejemplo: Hola servidor"
+    [value]="mensaje()"
+    (ionInput)="mensaje.set($event.detail.value ?? '')"></ion-input>
   </ion-item>
 
   <!-- TODO - Añadir el botón de envío -->
-  <ion-button expand="block" class="ion-margin-top" (click)="enviarMensaje()">
+  <ion-button expand="block" class="ion-margin-top" (click)="enviarMensaje()" [disabled]="enviando()">
     Enviar al servidor
   </ion-button>
 
   <!-- TODO - Añadir el mensaje de respuesta y el error-->
- 
+   @if(respuesta()){
+    <p><strong>Respuesta: </strong>{{respuesta()}}</p>
+    <p><strong>Recibido en: </strong>{{recibidoEn()}}</p>
+   }
+   @if(error()){
+    <p style="color: red">Error: {{error()}}</p>
+   }
+  
 </ion-content>

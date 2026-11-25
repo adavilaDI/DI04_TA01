@@ -7,6 +7,10 @@ export const routes: Routes = [
   },
 //TODO - Añadir aquí las rutas de los componentes que se vayan a crear
   {
+    path: 'prueba-servidor',
+    loadComponent: () => import('./prueba-servidor/prueba-servidor.page').then((m) => m.PruebaServidorPage),
+  },
+  {
     path: '',
     redirectTo: 'home',
     pathMatch: 'full',
