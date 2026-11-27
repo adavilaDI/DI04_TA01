@@ -55,4 +55,9 @@ export interface Restaurante {
   dataXML: string;
   metadataXML: string;
   zipFile: string;
-}
+};
+export interface FiltrosInforme {
+  busqueda: string;
+  territorios: string[];
+  localidades: string[];
+};

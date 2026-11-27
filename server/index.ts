@@ -1,10 +1,17 @@
+import { Puppeteer } from './node_modules/puppeteer-core/src/common/Puppeteer';
 // *****************************************************************************
 // SERVIDOR — Express (TypeScript)
 //
 // npm start ejecuta este archivo mediante tsx.
 // *****************************************************************************
 import cors from 'cors';
-import express, { type Request, type Response } from 'express';
+import express, { application, type Request, type Response } from 'express';
+
+import puppeteer from 'puppeteer';
+
+interface InformeRequestBody{
+  html?: string;
+}
 
 // Express recibe las peticiones HTTP y registra las rutas disponibles en esta
 // aplicación. Todas las configuraciones que se añaden con `app.use` se aplican
@@ -12,12 +19,17 @@ import express, { type Request, type Response } from 'express';
 const app = express();
 
 // Convierte cuerpos JSON en objetos JavaScript accesibles mediante `req.body`.
-app.use(express.json());
+app.use(express.json({limit: '10mb'}));
 
 // Permite que la aplicación Ionic, ejecutándose normalmente en otro puerto
 // durante el desarrollo, pueda llamar a este servidor. Sin CORS el navegador
 // bloquearía esa petición por pertenecer a un origen distinto.
 app.use(cors());
+
+const browserPromise = puppeteer.launch({
+  headless: true,
+  args: ['--no-sandbox', '--disable-setuid-sandbox'],
+});
 
 // *****************************************************************************
 // RUTA DE PRUEBA — pensada para el primer contacto con este servidor.
@@ -38,6 +50,29 @@ app.post('/api/eco', (req: Request<unknown, unknown, { mensaje?: string }>, res:
     mensaje: `El servidor ha recibido tu mensaje: "${mensaje}"`,
     recibidoEn: new Date().toISOString(),
   });
+});
+
+app.post('/api/informe', async(req: Request<unknown, unknown, InformeRequestBody>, res: Response) =>{
+  const {html} = req.body;
+
+  let page: Awaited<ReturnType<Awaited<typeof browserPromise>['newPage']>> | undefined;
+
+  try{
+    const browser = await browserPromise;
+    page = await browser.newPage();
+    await page.setContent(html!, {waitUntil: 'load'});
+
+    const pdfData = await page.pdf({
+      format: 'A4',
+      printBackground: true,
+      margin: {top:'15mm', bottom: '15mm', left: '12mm', right: '12mm'}
+    });
+    res.type('application/pdf').send(Buffer.from(pdfData));
+  } catch (error){
+    res.status(500).json({error: 'No se pudo generar el pdf'});
+  } finally{
+    await page?.close();
+  }
 });
 
 // Permite configurar el puerto mediante la variable de entorno `PORT`; cuando

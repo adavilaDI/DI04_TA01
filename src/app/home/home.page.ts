@@ -32,6 +32,7 @@ import { GraficosComponent } from '../components/graficos/graficos.component';
 import restaurantesJSON from '../../assets/datos/restaurantes.json';
 // TODO - importar RouterLink para poder usarlo en el HTML de este componente, tanto el import como el import en @Component. Se necesita para el botón de "Probar servidor" que se añadirá más adelante.
 import {RouterLink} from '@angular/router';
+import { Informe } from '../services/informe';
 
 @Component({
   selector: 'app-home',
@@ -52,7 +53,7 @@ export class HomePage {
   toastCtrl          = inject(ToastController);
   loadingCtrl        = inject(LoadingController);
   modalCtrl          = inject(ModalController);
-
+  informeService     = inject(Informe);
   // ─────────────────────────────────────────────────────────────────────────
   // DATOS LOCALES
   // Restaurantes leídos directamente del JSON local (usados para la importación)
@@ -66,6 +67,7 @@ export class HomePage {
   // Se leen llamándolos como función: signal()  |  Se actualizan con: signal.set(valor)
   // ─────────────────────────────────────────────────────────────────────────
 
+  generandoInforme = signal(false);
   /** Lista de restaurantes obtenidos de Firebase */
   restaurantesCargados = signal<Restaurante[]>([]);
 
@@ -110,6 +112,20 @@ export class HomePage {
       downloadOutline, lockClosedOutline, addOutline, arrowUpOutline, arrowDownOutline,
       barChartOutline, listOutline, documentTextOutline
     });
+  }
+
+  // Generar informe
+  async generarInformePdf(){
+    this.generandoInforme.set(true);
+    try{
+      await this.informeService.generarInformePdf(this.restaurantesFiltrados());
+      this.mostrarToast('Informe generado', 'success');
+    } catch {
+      this.mostrarToast('Problemas al generar informe', 'danger');
+
+    } finally{
+      this.generandoInforme.set(false);
+    }
   }
 
   // ─────────────────────────────────────────────────────────────────────────

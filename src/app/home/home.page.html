@@ -42,7 +42,12 @@
         title = 'Probar la conexión con el servidor'>
         <ion-icon slot='start' name = 'document-text-outline'></ion-icon>
         Probar Servidor
-      </ion-button>      
+      </ion-button>  
+      <ion-button
+        (click)="generarInformePdf()"
+        [disabled]="cargando() || importando() || generandoInforme()">
+        Informe PDF
+      </ion-button>    
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
